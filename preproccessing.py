@@ -2,6 +2,7 @@
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
+from sentence_transformers import SentenceTransformer
 
 
 nltk.download("punkt")
@@ -9,7 +10,7 @@ nltk.download("punkt")
 
 class preproccessing:
     def __init__(self):
-        pass
+        self.bert_model = SentenceTransformer("bert-base-nli-mean-tokens")
 
     def preproccess(self, dataset):
         # Tokenization
@@ -25,6 +26,20 @@ class preproccessing:
         cleaned_dataset = self.remove_stop_word(stemmed_dataset)
 
         return cleaned_dataset
+
+    def to_sentence_embeddings(self, sentences: list):
+        """
+        Input: list of sentences (list of list of tokens)
+        Output: sentence_embeddings (numpy array) [sentence_embedding]
+                (n_sample, 768)
+        """
+        # Obtain sentence embeddings using the BERT model
+        sentence_embeddings = self.bert_model.encode(sentences)
+
+        # Reshape it to (n_sample, 768)
+        sentence_embeddings = sentence_embeddings
+
+        return sentence_embeddings
 
     def tokenize(self, dataset: list):
         """

@@ -1,5 +1,6 @@
 import os
 import pickle
+import numpy as np
 import pandas as pd
 
 
@@ -9,13 +10,17 @@ class my_io:
             self.dataset_file_path = dataset_file_path
         self.data = []
 
-    def read_dataset(self, dataset_file_path: str = None):
+    def read_dataset(self, dataset_file_path: str = None) -> np.ndarray:
+        """
+        Input: dataset_file_path (str)
+        Output: data (numpy array) [sentence1, sentence2, score]
+        """
         if dataset_file_path is not None:
             self.dataset_file_path = dataset_file_path
         else:
             if self.dataset_file_path is None:
                 print("Error: dataset path is not defined!")
-                return
+                return None
 
         if not os.path.exists(self.dataset_file_path):
             print("Error: dataset file does not exist!")
@@ -34,6 +39,10 @@ class my_io:
             pickle.dump(data, f)
 
     def load_data(self, filename):
+        # Check if the file exists
+        if not os.path.exists(filename):
+            return None
+
         with open(filename, "rb") as f:
             data = pickle.load(f)
         return data
